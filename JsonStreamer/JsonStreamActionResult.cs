@@ -392,7 +392,6 @@ namespace JsonStreamer
             }
 
             await writter.FlushAsync();
-            await StreamToWrite.FlushAsync();
         }
 
         /// <summary>
