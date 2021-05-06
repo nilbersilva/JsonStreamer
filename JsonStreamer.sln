@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonStreamer", "JsonStreamer\JsonStreamer.csproj", "{CFF0170F-E7BD-47A8-B8DC-881463FE989B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EFECE9E9-0618-4340-9F0E-356DC9A84712}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonStreamerTests", "JsonStreamerTests\JsonStreamerTests.csproj", "{36A46D03-C383-4484-89E1-241B056C4F80}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFF0170F-E7BD-47A8-B8DC-881463FE989B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFF0170F-E7BD-47A8-B8DC-881463FE989B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFF0170F-E7BD-47A8-B8DC-881463FE989B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFF0170F-E7BD-47A8-B8DC-881463FE989B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36A46D03-C383-4484-89E1-241B056C4F80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36A46D03-C383-4484-89E1-241B056C4F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36A46D03-C383-4484-89E1-241B056C4F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36A46D03-C383-4484-89E1-241B056C4F80}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {245D6098-23F2-48AA-94F2-428EF7DFC412}
+	EndGlobalSection
+EndGlobal
