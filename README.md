@@ -11,7 +11,7 @@ Example using the class can be seen on the **JsonStreamerTests** Project - Metho
 ## DataSetJsonStream
 This Class will stream a System.Data.DataSet as JSON UTF8 which can be Deserialized using the Async Method **DataSetJsonStreamDeserializer.DeserializeStream**
 
-This Deserializer Suports Lists the following types:
+This Deserializer Suports Lists of the following types:
 - Primitive Types (bool, int, long, double, single, etc)
 - String
 - Decimal
