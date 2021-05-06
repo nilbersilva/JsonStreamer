@@ -22,8 +22,7 @@ namespace JsonStreamer
         public Stream StreamToWrite { get; set; }
         public string ContentType = "application/json; charset=utf-8";
         private System.Text.Json.Utf8JsonWriter writter { get; set; }
-        public JsonSerializerOptions JsonSerializerOptions { get; set; }
-
+        private JsonSerializerOptions JsonSerializerOptions { get; set; }
         public JsonWriterOptions JsonWriterOptions { get; set; }
 
         /// <summary>
@@ -115,6 +114,7 @@ namespace JsonStreamer
                 await readyTaskCompletionSource.Task;
             }
 
+            if (JsonSerializerOptions == null) JsonSerializerOptions = new JsonSerializerOptions() { WriteIndented = writter.Options.Indented };
             JsonSerializer.Serialize(writter, value, JsonSerializerOptions);
 
             if (bFlushStream) await FlushStream();
@@ -377,7 +377,7 @@ namespace JsonStreamer
                 await readyTaskCompletionSource.Task;
             }
 
-            await DataSetJsonStream.WriteToStream(StreamToWrite, DS, cancellationToken, new JsonWriterOptions() { Indented = this.JsonSerializerOptions?.WriteIndented ?? false });
+            await DataSetJsonStream.WriteToStream(StreamToWrite, DS, cancellationToken, JsonWriterOptions);
         }
 
         /// <summary>
