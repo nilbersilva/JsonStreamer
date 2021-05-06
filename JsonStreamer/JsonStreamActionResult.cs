@@ -105,8 +105,6 @@ namespace JsonStreamer
                 await readyTaskCompletionSource.Task;
             }
 
-            if (value == null) return;
-
             JsonSerializer.Serialize(writter, value, JsonSerializerOptions);
             
             if (bFlushStream) await FlushStream();
@@ -404,32 +402,38 @@ namespace JsonStreamer
             if (!disposed)
             {
                 disposed = true;
-                try
-                {
-                    if (_context != null) await _context.HttpContext.Response.CompleteAsync();
-                }
-                catch (Exception)
-                {}
 
                 if (writter != null)
                 {
                     try
                     {
-                        await writter.FlushAsync();                        
+                        await writter.FlushAsync();
                     }
                     catch (Exception)
-                    {}
+                    { }
                     try
                     {
                         await writter.DisposeAsync();
                     }
                     catch (Exception)
-                    {}
-                }                
+                    { }
+                }
+
+                if (_context != null)
+                {
+                    try
+                    {
+                        await _context.HttpContext.Response.CompleteAsync();
+                    }
+                    catch (Exception)
+                    { }
+                }
+
                 Complete();
                 GC.SuppressFinalize(this);
             }
         }
+
 
         public ValueTask DisposeAsync()
         {
