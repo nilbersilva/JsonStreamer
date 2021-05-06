@@ -16,7 +16,6 @@ namespace JsonStreamer
     {
         public static async Task WriteToStream(Stream StreamToWrite, DataSet DS, CancellationToken cancellationToken, JsonWriterOptions JsonWriterOptions)
         {
-            //JsonWriterOptions.Encoder = JavaScriptEncoder.Create()
             using (System.Text.Json.Utf8JsonWriter writter = new System.Text.Json.Utf8JsonWriter(StreamToWrite, JsonWriterOptions))
             {
                 writter.WriteStartObject();

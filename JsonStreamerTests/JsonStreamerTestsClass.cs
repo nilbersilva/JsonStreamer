@@ -71,13 +71,9 @@ namespace JsonStreamerTests
                     jsonStream.ForceReady();
 
                     //Json Object Start And Json Array Start
-                    await jsonStream.WriteTextAsync("[", CancellationToken.None);
+                    await jsonStream.WriteStartArray();
                     for (int i = 1; i < 11; i++)
                     {
-                        if(i > 1)
-                        {
-                            await jsonStream.WriteTextAsync(",", CancellationToken.None);
-                        }
                         var newItem = new TestClass()
                         {
                             Name = $"TestName-{i}",
@@ -87,7 +83,7 @@ namespace JsonStreamerTests
                         await jsonStream.WriteJsonAsync(newItem, CancellationToken.None);
                     }
                     //Json Array End Json Object End 
-                    await jsonStream.WriteTextAsync("]", CancellationToken.None);
+                    await jsonStream.WriteEndArray();
 
                 }
 

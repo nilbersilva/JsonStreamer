@@ -18,8 +18,8 @@ namespace JsonStreamer
         private ActionContext _context { get; set; }
         private bool disposed = false;
         public Stream StreamToWrite { get; set; }
-
         public string ContentType = "application/json";
+        private System.Text.Json.Utf8JsonWriter writter { get; set; }
         public JsonSerializerOptions JsonSerializerOptions { get; set; }
 
         /// <summary>
@@ -71,6 +71,11 @@ namespace JsonStreamer
 
             StreamToWrite = _context.HttpContext.Response.Body;
 
+            if (writter == null)
+            {
+                writter = new System.Text.Json.Utf8JsonWriter(StreamToWrite, new JsonWriterOptions() { Indented = JsonSerializerOptions?.WriteIndented ?? false });
+            }
+
             readyTaskCompletionSource.SetResult(true);
 
             await completeTaskCompletionSource.Task;
@@ -78,6 +83,11 @@ namespace JsonStreamer
 
         public void ForceReady()
         {
+            if (writter == null)
+            {
+                writter = new System.Text.Json.Utf8JsonWriter(StreamToWrite, new JsonWriterOptions() { Indented = JsonSerializerOptions?.WriteIndented ?? false });
+            }
+
             readyTaskCompletionSource.TrySetResult(true);
         }
 
@@ -97,29 +107,262 @@ namespace JsonStreamer
 
             if (value == null) return;
 
-            await JsonSerializer.SerializeAsync(StreamToWrite, value, value.GetType(), JsonSerializerOptions, cancellationToken);
+            JsonSerializer.Serialize(writter, value, JsonSerializerOptions);
+            
             if (bFlushStream) await FlushStream();
         }
-
-        /// <summary>
-        /// Text Will be Written using UTF8 Encoding
-        /// </summary>
-        /// <param name="Text">Value to Write to the Response Stream</param>
-        /// <param name="cancellationToken">Normally RequestAborted Token is used</param>
-        /// <param name="bFlushStream">Await Response Body Flush Stream<param>
-        /// <returns>Task</returns>
-        public async Task WriteTextAsync(string Text, CancellationToken cancellationToken, bool bFlushStream = true)
+        
+        public async Task WriteString(string propertyName, string value)
         {
             if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
             {
                 await readyTaskCompletionSource.Task;
             }
 
-            await StreamToWrite.WriteAsync(Encoding.UTF8.GetBytes(Text), cancellationToken);
-            if (bFlushStream) await FlushStream();
+            writter.WriteString(propertyName, value);
         }
 
-        public async Task WriteDataSetAsync(DataSet DS, CancellationToken cancellationToken, bool bFlushStream = true)
+        public async Task WriteString(string propertyName, DateTime value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteString(propertyName, value);
+        }
+
+        public async Task WriteString(string propertyName, DateTimeOffset value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteString(propertyName, value);
+        }
+
+        public async Task WriteString(string propertyName, Guid value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteString(propertyName, value);
+        }
+        
+        public async Task WriteStringValue(string value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteStringValue(value);
+        }
+
+        public async Task WriteStringValue(DateTime value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteStringValue(value);
+        }
+
+        public async Task WriteStringValue(DateTimeOffset value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteStringValue(value);
+        }
+
+        public async Task WriteStringValue(Guid value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteStringValue(value);
+        }
+
+        public async Task WriteBoolean(string propertyName, bool value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteBoolean(propertyName, value);
+        }
+
+        public async Task WriteBooleanValue(bool value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteBooleanValue(value);
+        }
+       
+        public async Task WriteNumber(string propertyName, decimal value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteNumber(propertyName, value);
+        }
+
+        public async Task WriteNumber(string propertyName, int value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteNumber(propertyName, value);
+        }
+
+        public async Task WriteNumber(string propertyName, uint value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteNumber(propertyName, value);
+        }
+
+        public async Task WriteNumber(string propertyName, float value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteNumber(propertyName, value);
+        }
+
+        public async Task WriteNumber(string propertyName, long value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteNumber(propertyName, value);
+        }
+
+        public async Task WriteNumber(string propertyName, ulong value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteNumber(propertyName, value);
+        }
+
+        public async Task WriteNumber(string propertyName, double value)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteNumber(propertyName, value);
+        }
+
+        public async Task WriteStartObject()
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteStartObject();
+        }
+
+        public async Task WriteStartObject(string propertyName)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+            
+            writter.WriteStartObject(propertyName);
+        }
+
+        public async Task WriteEndObject()
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteEndObject();
+        }
+
+        public async Task WriteStartArray()
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteStartArray();
+        }
+
+        public async Task WriteStartArray(string propertyName)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteStartArray(propertyName);
+        }
+
+        public async Task WriteEndArray()
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteEndArray();
+        }
+
+        public async Task WriteNull(string propertyName)
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteNull(propertyName);
+        }
+
+        public async Task WriteNullValue()
+        {
+            if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
+            {
+                await readyTaskCompletionSource.Task;
+            }
+
+            writter.WriteNullValue();
+        }
+
+        public async Task WriteDataSetAsync(DataSet DS, CancellationToken cancellationToken)
         {
             if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
             {
@@ -130,92 +373,7 @@ namespace JsonStreamer
             ContentType = "application/jsondataset";
             _context.HttpContext.Response.ContentType = ContentType;
 
-            bool Indented = JsonSerializerOptions?.WriteIndented ?? false;
-
-            string dataSetHeader = "{";
-
-            if (Indented)
-            {
-                dataSetHeader += "\n";
-            }
-
-            dataSetHeader += "\"Tables\":[";
-
-            await WriteTextAsync(dataSetHeader, cancellationToken, bFlushStream);
-
-            var lastTable = DS.Tables[DS.Tables.Count - 1];
-
-            foreach (DataTable table in DS.Tables)
-            {
-                string tableHeader = "{";
-
-                if (Indented)
-                {
-                    tableHeader += "\n";
-                }
-
-                tableHeader += $"\"TableName\": \"{table.TableName}\",";
-
-                if (Indented)
-                {
-                    tableHeader += "\n";
-                }
-
-                tableHeader += "\"Columns\":[";
-                for (int i = 0; i < table.Columns.Count; i++)
-                {
-                    var column = table.Columns[i];
-
-                    tableHeader += $"[ \"{column.ColumnName}\" , \"{column.DataType.FullName}\"]";
-
-                    //Close Columns Array
-                    if (i == table.Columns.Count - 1) tableHeader += "]";
-
-                    tableHeader += ",";
-
-                    if (Indented)
-                    {
-                        tableHeader += "\n";
-                    }
-                }
-
-                tableHeader += "\"Rows\":[";
-
-                await WriteTextAsync(tableHeader, cancellationToken, bFlushStream);
-
-                var LastRow = table.Rows[table.Rows.Count - 1];
-
-                foreach (DataRow row in table.Rows)
-                {
-                    await WriteJsonAsync(row.ItemArray, cancellationToken, false);
-
-                    //Append command before last row
-                    if (row != LastRow) await WriteTextAsync(",", cancellationToken, false);
-
-                    if (Indented)
-                    {
-                        await WriteTextAsync("\n", cancellationToken, bFlushStream);
-                    }
-                }
-
-
-                if (table != lastTable)
-                {
-                    await WriteTextAsync("]},", cancellationToken, false);
-
-                    if (Indented)
-                    {
-                        await WriteTextAsync("\n", cancellationToken, bFlushStream);
-                    }
-                }
-                else
-                {
-                    await WriteTextAsync("]}", cancellationToken, false);
-                }
-            }
-
-            //Write DataSet Closing Tags.
-            await WriteTextAsync("]}", cancellationToken, true);
+            await DataSetJsonStream.WriteToStream(StreamToWrite, DS, cancellationToken, new JsonWriterOptions() { Indented = this.JsonSerializerOptions?.WriteIndented ?? false });
         }
 
         /// <summary>
@@ -229,6 +387,7 @@ namespace JsonStreamer
                 await readyTaskCompletionSource.Task;
             }
 
+            await writter.FlushAsync();
             await StreamToWrite.FlushAsync();
         }
 
@@ -250,8 +409,23 @@ namespace JsonStreamer
                     if (_context != null) await _context.HttpContext.Response.CompleteAsync();
                 }
                 catch (Exception)
+                {}
+
+                if (writter != null)
                 {
-                }
+                    try
+                    {
+                        await writter.FlushAsync();                        
+                    }
+                    catch (Exception)
+                    {}
+                    try
+                    {
+                        await writter.DisposeAsync();
+                    }
+                    catch (Exception)
+                    {}
+                }                
                 Complete();
                 GC.SuppressFinalize(this);
             }
