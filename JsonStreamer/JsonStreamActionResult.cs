@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Text;
 using System.Data;
 using System.IO;
+using System.Text.Unicode;
+using System.Text.Encodings.Web;
 
 namespace JsonStreamer
 {
@@ -18,14 +20,21 @@ namespace JsonStreamer
         private ActionContext _context { get; set; }
         private bool disposed = false;
         public Stream StreamToWrite { get; set; }
-        public string ContentType = "application/json";
+        public string ContentType = "application/json; charset=utf-8";
         private System.Text.Json.Utf8JsonWriter writter { get; set; }
         public JsonSerializerOptions JsonSerializerOptions { get; set; }
+
+        public JsonWriterOptions JsonWriterOptions { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTP status code.
         /// </summary>
         public int? StatusCode { get; set; }
+
+        public JsonStreamActionResult()
+        {
+            JsonWriterOptions = new JsonWriterOptions() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+        }
 
         /// <summary>
         /// Executes the result operation of the action method synchronously. This method is called by the Controller to process the result of an action method.
@@ -69,11 +78,12 @@ namespace JsonStreamer
             if (!string.IsNullOrWhiteSpace(ContentType))
                 context.HttpContext.Response.ContentType = ContentType;
 
+
             StreamToWrite = _context.HttpContext.Response.Body;
 
             if (writter == null)
             {
-                writter = new System.Text.Json.Utf8JsonWriter(StreamToWrite, new JsonWriterOptions() { Indented = JsonSerializerOptions?.WriteIndented ?? false });
+                writter = new System.Text.Json.Utf8JsonWriter(StreamToWrite, JsonWriterOptions);
             }
 
             readyTaskCompletionSource.SetResult(true);
@@ -85,7 +95,7 @@ namespace JsonStreamer
         {
             if (writter == null)
             {
-                writter = new System.Text.Json.Utf8JsonWriter(StreamToWrite, new JsonWriterOptions() { Indented = JsonSerializerOptions?.WriteIndented ?? false });
+                writter = new System.Text.Json.Utf8JsonWriter(StreamToWrite, JsonWriterOptions);
             }
 
             readyTaskCompletionSource.TrySetResult(true);
@@ -106,10 +116,10 @@ namespace JsonStreamer
             }
 
             JsonSerializer.Serialize(writter, value, JsonSerializerOptions);
-            
+
             if (bFlushStream) await FlushStream();
         }
-        
+
         public async Task WriteString(string propertyName, string value)
         {
             if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
@@ -149,7 +159,7 @@ namespace JsonStreamer
 
             writter.WriteString(propertyName, value);
         }
-        
+
         public async Task WriteStringValue(string value)
         {
             if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
@@ -209,7 +219,7 @@ namespace JsonStreamer
 
             writter.WriteBooleanValue(value);
         }
-       
+
         public async Task WriteNumber(string propertyName, decimal value)
         {
             if (!readyTaskCompletionSource.Task.IsCompletedSuccessfully)
@@ -296,7 +306,7 @@ namespace JsonStreamer
             {
                 await readyTaskCompletionSource.Task;
             }
-            
+
             writter.WriteStartObject(propertyName);
         }
 
@@ -367,10 +377,6 @@ namespace JsonStreamer
                 await readyTaskCompletionSource.Task;
             }
 
-            //Write DataSet Header
-            ContentType = "application/jsondataset";
-            _context.HttpContext.Response.ContentType = ContentType;
-
             await DataSetJsonStream.WriteToStream(StreamToWrite, DS, cancellationToken, new JsonWriterOptions() { Indented = this.JsonSerializerOptions?.WriteIndented ?? false });
         }
 
@@ -433,7 +439,6 @@ namespace JsonStreamer
                 GC.SuppressFinalize(this);
             }
         }
-
 
         public ValueTask DisposeAsync()
         {
